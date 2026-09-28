@@ -1,0 +1,28 @@
+services:
+  auth-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: authdb
+      POSTGRES_USER: authuser
+      POSTGRES_PASSWORD: authpass
+    volumes:
+      - authdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U authuser -d authdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "8081:8080"
+    environment:
+      DB_USER: authuser
+      DB_PASSWORD: authpass
+    depends_on:
+      auth-db:
+        condition: service_healthy
+
+volumes:
+  authdata:
