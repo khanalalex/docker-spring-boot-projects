@@ -3,12 +3,12 @@ services:
     image: postgres:16-alpine
     environment:
       POSTGRES_DB: authdb
-      POSTGRES_USER: authuser
-      POSTGRES_PASSWORD: authpass
+      POSTGRES_USER: ${AUTH_DB_USER}
+      POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD}
     volumes:
       - authdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U authuser -d authdb"]
+      test: ["CMD-SHELL", "pg_isready -U ${AUTH_DB_USER} -d authdb"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -16,8 +16,8 @@ services:
   auth-service:
     build: ./auth-service
     environment:
-      DB_USER: authuser
-      DB_PASSWORD: authpass
+      DB_USER: ${AUTH_DB_USER}
+      DB_PASSWORD: ${AUTH_DB_PASSWORD}
     depends_on:
       auth-db:
         condition: service_healthy
@@ -26,12 +26,12 @@ services:
     image: postgres:16-alpine
     environment:
       POSTGRES_DB: bookdb
-      POSTGRES_USER: bookuser
-      POSTGRES_PASSWORD: bookpass
+      POSTGRES_USER: ${BOOK_DB_USER}
+      POSTGRES_PASSWORD: ${BOOK_DB_PASSWORD}
     volumes:
       - bookdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U bookuser -d bookdb"]
+      test: ["CMD-SHELL", "pg_isready -U ${BOOK_DB_USER} -d bookdb"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -39,8 +39,8 @@ services:
   book-service:
     build: ./book-service
     environment:
-      DB_USER: bookuser
-      DB_PASSWORD: bookpass
+      DB_USER: ${BOOK_DB_USER}
+      DB_PASSWORD: ${BOOK_DB_PASSWORD}
     depends_on:
       book-db:
         condition: service_healthy
@@ -49,12 +49,12 @@ services:
     image: postgres:16-alpine
     environment:
       POSTGRES_DB: orderdb
-      POSTGRES_USER: orderuser
-      POSTGRES_PASSWORD: orderpass
+      POSTGRES_USER: ${ORDER_DB_USER}
+      POSTGRES_PASSWORD: ${ORDER_DB_PASSWORD}
     volumes:
       - orderdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U orderuser -d orderdb"]
+      test: ["CMD-SHELL", "pg_isready -U ${ORDER_DB_USER} -d orderdb"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -62,8 +62,8 @@ services:
   order-service:
     build: ./order-service
     environment:
-      DB_USER: orderuser
-      DB_PASSWORD: orderpass
+      DB_USER: ${ORDER_DB_USER}
+      DB_PASSWORD: ${ORDER_DB_PASSWORD}
     depends_on:
       order-db:
         condition: service_healthy
