@@ -7,6 +7,15 @@ RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
+
+# Create a dedicated non-root user and group
+RUN addgroup -S spring && adduser -S spring -G spring
+
 COPY --from=build /app/target/*.jar app.jar
+
+# Ensure the app files are owned by the new user, then switch to it
+RUN chown spring:spring app.jar
+USER spring
+
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
