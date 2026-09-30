@@ -28,7 +28,7 @@ public class AuthController {
 
         User user = new User(username, passwordEncoder.encode(rawPassword));
         repository.save(user);
-        return "User registered successfully";
+        return "User registered successfully ! ";
     }
 
     @PostMapping("/login")

@@ -12,6 +12,11 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
 
   auth-service:
     build: ./auth-service
@@ -21,6 +26,11 @@ services:
     depends_on:
       auth-db:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
 
   book-db:
     image: postgres:16-alpine
@@ -35,6 +45,11 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
 
   book-service:
     build: ./book-service
@@ -44,6 +59,11 @@ services:
     depends_on:
       book-db:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
 
   order-db:
     image: postgres:16-alpine
@@ -58,6 +78,11 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
 
   order-service:
     build: ./order-service
@@ -69,6 +94,11 @@ services:
         condition: service_healthy
       book-service:
         condition: service_started
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
 
   api-gateway:
     build: ./api-gateway
@@ -78,6 +108,11 @@ services:
       - auth-service
       - book-service
       - order-service
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
 
 volumes:
   authdata:
